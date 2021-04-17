@@ -2,7 +2,7 @@
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QLineEdit, QPushButton
 from PyQt5.QtGui import QFont, QColor
 import sys
-from random import choice
+from random import randrange, choice
 
 
 class MW(QMainWindow):
@@ -60,15 +60,19 @@ class MW(QMainWindow):
             self.tasklabs[-1].move(0, i * 55)
             self.tasklabs[-1].setFont(QFont('Ariel', 12))
             self.tasklabs[-1].show()
+        self.update()
         
     def update(self):
         '''обновление задачи'''
         self.oklab.hide()  # скрытие лабела
         # рандомизация коэфициентов
-        self.variables = [choice([-1, 1]), choice([1, 2, 3]), choice(range(1, 25)), choice(range(-5, 5)), choice(range(-5, 5)),
-                          choice(range(-10, 5)), choice(range(-20, 20)), choice(list(range(-5, 0)) + list(range(1, 5))), choice(range(1, 5))]
-        self.variables2 = [choice(range(-5, 5)), choice(range(-10, 5)), choice(range(-20, 20)), choice(list(range(-5, 0)) + list(range(1, 5))), choice(range(1, 5))]
-        self.whatcall = choice(range(10, 500))  # рандомизация аргумента
+        self.variables = [choice([-1, 1]), randrange(1, 4), randrange(1, 25), randrange(-5, 5), randrange(-5, 5),
+                          randrange(-10, 5), randrange(-20, 20), choice(tuple(set(range(-5, 5)) - {0})), randrange(1, 5)]
+        self.variables2 = [randrange(-5, 5), randrange(-10, 5), randrange(-20, 20), choice(tuple(set(range(-5, 5)) - {0})), randrange(1, 5)]
+        if self.variables[0] == -1:
+            self.whatcall = choice(range(self.variables[2] - 10, self.variables[2]))  # рандомизация аргумента
+        else:
+            self.whatcall = choice(range(self.variables[2] + 1, self.variables[2] + 11))  # рандомизация аргумента
         self.answer = self.getRec(self.whatcall)
         # заполняем лабел 0 (заголовок нерекурсии)
         s = 'При n <= ' + str(self.variables[2]) + ':'  # просто строка для промежуточного хранения текста
